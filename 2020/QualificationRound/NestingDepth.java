@@ -1,5 +1,7 @@
 import java.util.Scanner;
-class NestingDepth {
+
+public class NestingDepth {
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		int t = sc.nextInt();
