@@ -11,11 +11,11 @@ public class ESAbATAd {
 			int idx_left = 0, idx_right = b-1;
 			boolean first_round = true;
 			while(true) {
-				if(idx_left > idx_right) { //found all
+				if(idx_left > idx_right) { //check every 10 questions if we found all
 					if(guess(bits, sc)) break;
 					else System.exit(0);
 				}
-				if(first_round) { //ask 10 positions
+				if(first_round) { //ask about 10 positions
 					for(int i = 0; i < 5; i++) {
 						System.out.println(idx_left+1);
 						bits[idx_left] = sc.nextInt();
@@ -28,9 +28,10 @@ public class ESAbATAd {
 					}
 					first_round = false;
 				} else {
+					//figure out what happened
 					boolean invert = false, swap = false;
-					int tmp, asked = 0;;
-					int[] pos = findSuitable(bits, idx_left, idx_right);
+					int tmp, asked = 0;
+					int[] pos = findSuitable(bits, idx_left);
 					if(pos[0] != -1) {
 						System.out.println(pos[0]+1);
 						tmp = sc.nextInt();
@@ -44,6 +45,7 @@ public class ESAbATAd {
 						if(invert && tmp == bits[pos[1]] || !invert && tmp != bits[pos[1]]) swap = true;
 					}
 					bits = modify(bits, invert, swap);
+					//ask remaining questions
 					if(asked%2 == 0) {
 						for(int i = 0; i < 5-asked/2; i++) {
 							System.out.println(idx_left+1);
@@ -87,16 +89,16 @@ public class ESAbATAd {
 			else for(int i = 0; i < b.length; i++) a[i] = b[b.length-1-i];
 		} else {
 			if(invert) for(int i = 0; i < b.length; i++) a[i] = b[i] == 1 ? 0 : 1;
-			else for(int i = 0; i < b.length; i++) a[i] = b[i];
+			else return b;
 		}
 		return a;
 	}
 
-	private static int[] findSuitable(int[] b, int idx_left, int idx_right) {
+	private static int[] findSuitable(int[] b, int idx_left) {
 		int same = -1, diff = -1;
 		for(int i = 0; i < idx_left; i++) {
 			if(same == -1 && b[i] == b[b.length-1-i]) same = i;
-			if(diff == -1 && (b[i] > b[b.length-1-i] || b[i] < b[b.length-1-i])) diff = i;
+			else if(diff == -1 && b[i] != b[b.length-1-i]) diff = i;
 			if(diff != -1 && same != -1) break;
 		}
 		return new int[] {same, diff};
